@@ -1,0 +1,60 @@
+#
+# SPDX-FileCopyrightText: Copyright (c) 2023-2024, Idiap Research Institute. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+
+version = 1
+
+[[annotations]]
+path = [
+     "synthetics/eg3d/**",
+     "synthetics/nvdiffrast/**",
+     "synthetics/stylegan3/**",
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) NVIDIA Corporation & affiliates"
+SPDX-License-Identifier = "LicenseRef-NvidiaSourceCode1WayCommercial"
+
+[[annotations]]
+path = [
+     "synthetics/adaface/**"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) 2022 Minchul Kim"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+     "synthetics/deep_3d_face_recon/**"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) 2022 Sicheng Xu"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+     "synthetics/insightface/**"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) Authors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+     "synthetics/external/restyle/**"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) 2021 Yuval Alaluf"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+     ".vscode/**",
+     "version.txt",
+     "doc/**",
+     "synthetics/database_sql_scripts/project/protocols/**/*.lst"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) 2025 Idiap Research Institute"
+SPDX-License-Identifier = "LicenseRef-IdiapNCResearchAndEducationalOnly"
+

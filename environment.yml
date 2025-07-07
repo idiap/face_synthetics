@@ -1,0 +1,50 @@
+#
+# SPDX-FileCopyrightText: Copyright (c) 2023-2024, Idiap Research Institute. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-IdiapNCResearchAndEducationalOnly
+#
+
+name: synthetics
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python == 3.10
+  - pip
+  - pytorch >= 2.2.2
+  - pytorch-cuda >= 12.1
+  - cudatoolkit
+  - torchvision
+  - kornia
+  - einops
+  - ninja
+  - dlib
+  - scipy
+  - pyyaml
+  - h5py
+  - imageio
+  - imageio-ffmpeg
+  - pillow
+  - pyqtgraph
+  - pyside2
+  - click
+  - tqdm
+  - opencv
+  - libopencv
+  - py-opencv
+  - scikit-image
+  - trimesh
+  - scikit-learn
+  - sqlalchemy
+  - pandas
+  - matplotlib
+  - pip:
+    - imgui
+    - glfw==2.2.0
+    - pyopengl
+    - pyspng
+    - psutil
+    - mrcfile
+    - gdown
+    - facenet-pytorch
+    - pip install stylegan2_pytorch

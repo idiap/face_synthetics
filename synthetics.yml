@@ -1,0 +1,120 @@
+#
+# SPDX-FileCopyrightText: Copyright (c) 2023-2024, Idiap Research Institute. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-IdiapNCResearchAndEducationalOnly
+#
+
+config:
+  source: $synthetics_git_path
+  models: $user_models_cache_path
+  latent_directions: $data_path/latent_directions/
+  databases:
+    user_index_directory: $data_path/databases_index
+    local_index_repository: $databases_index_path/databases_index
+    multipie:
+      data_path: $databases_path/Multi-Pie/data/
+    ffhq:
+      data_path: $databases_path/Flickr-Faces-HQ/
+  bfm_folder: $user_models_cache_path/BFM/
+models:
+  stylegan2: # this model has to be converted to pytorch from tf with nvidia script
+    type: gan
+    file_name: stylegan2.pkl
+    local_model_zoo: $model_zoo_dir/stylegan2.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan2/versions/1/files/stylegan2-ffhq-1024x1024.pkl
+  stylegan2-256:
+    type: gan
+    file_name: stylegan2-256.pkl
+    local_model_zoo: $model_zoo_dir/stylegan2-256.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan2/versions/1/files/stylegan2-ffhq-256x256.pkl
+  stylegan3:
+    type: gan
+    file_name: stylegan3.pkl
+    local_model_zoo: $model_zoo_dir/stylegan3.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-ffhq-1024x1024.pkl
+  stylegan3-t-265:
+    type: gan
+    file_name: stylegan3-t-265.pkl
+    local_model_zoo: $model_zoo_dir/stylegan3-t-265.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-ffhqu-256x256.pkl
+  stylegan3-r-265:
+    type: gan
+    file_name: stylegan3-r-265.pkl
+    local_model_zoo: $model_zoo_dir/stylegan3-r-265.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-r-ffhqu-256x256.pkl
+  eg3d:
+    type: gan
+    file_name: eg3d-ffhq512-128.pkl
+    local_model_zoo: $model_zoo_dir/eg3d-ffhq512-128.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/eg3d/versions/1/files/ffhq512-128.pkl
+  stylegan2-lucidrains-128:
+    type: gan-lucidrains
+    file_name: stylegan2-lucidrains-ffhq-128.pt
+  stylegan2-rosinality-1024:
+    type: gan-rosinality
+    file_name: stylegan2-ffhq-config-f.pt
+    gdrive_id: 1EM87UquaoQmk17Q8d5kYIAHqu0dkYqdT
+  stylegan2-rosinality-256:
+    type: gan-rosinality
+    file_name: stylegan2-ffhq-config-f.pt
+    gdrive_id: 1EM87UquaoQmk17Q8d5kYIAHqu0dkYqdT
+  dlib_lmd:
+    type: landmarks
+    file_name: dlib_detector.dat
+    local_model_zoo: $model_zoo_dir/dlib_detector.dat
+    web_url: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+    compression: bz2
+  vgg16:
+    type: vgg16
+    file_name: vgg16.pkl
+    local_model_zoo: $model_zoo_dir/vgg16.pkl
+    web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/metrics/vgg16.pkl
+  lm3d_std:
+    type: landmarks_3d
+    file_name: similarity_Lm3D_all.mat
+    local_model_zoo: $model_zoo_dir/similarity_Lm3D_all.mat
+    web_url: https://github.com/sicxu/Deep3DFaceRecon_pytorch/raw/master/BFM/similarity_Lm3D_all.mat
+  deep3dfr:
+    type: face_recon_3d
+    file_name: deep_3d_face_recon_epoch_20.pth
+    local_model_zoo: $model_zoo_dir/deep_3d_face_recon/epoch_20.pth
+    gdrive_id: 15-38Iqv7vmZou8fDVBAt_c9PwgJn1BHo
+  bfm_front: # need to fill a form to obtain the model files
+    type: face_model
+    file_name: BFM_model_front.mat
+    local_model_zoo: $model_zoo_dir/BFM/BFM_model_front.mat
+  iresnet34:
+    type: embedding
+    file_name: iresnet34-5b0d0e90.pth
+    local_model_zoo: $model_zoo_dir/iresnet/iresnet34-5b0d0e90.pth
+    backbone_type: iresnet
+    architecture: iresnet34
+  iresnet50:
+    type: embedding
+    file_name: iresnet50-7f187506.pth
+    local_model_zoo: $model_zoo_dir/iresnet/iresnet50-7f187506.pth
+    backbone_type: iresnet
+    architecture: iresnet50
+  iresnet100:
+    type: embedding
+    file_name: iresnet100-73e07ba7.pth
+    local_model_zoo: $model_zoo_dir/iresnet/iresnet100-73e07ba7.pth
+    backbone_type: iresnet
+    architecture: iresnet100
+  adaface_r18_webface4m:
+    type: embedding
+    file_name: adaface_ir18_webface4m.ckpt
+    gdrive_id: 1J17_QW1Oq00EhSWObISnhWEYr2NNrg2y
+    backbone_type: adaface
+    architecture: ir_18
+  adaface_r50_webface4m:
+    type: embedding
+    file_name: adaface_ir50_webface4m.ckpt
+    gdrive_id: 1BmDRrhPsHSbXcWZoYFPJg2KJn1sd3QpN
+    backbone_type: adaface
+    architecture: ir_50
+  adaface_r100_webface12m:
+    type: embedding
+    file_name: adaface_ir101_webface12m.ckpt
+    gdrive_id: 1dswnavflETcnAuplZj1IOKKP0eM8ITgT
+    backbone_type: adaface
+    architecture: ir_101

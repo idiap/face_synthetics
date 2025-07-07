@@ -1,0 +1,33 @@
+#
+# SPDX-FileCopyrightText: Copyright (c) 2023-2024, Idiap Research Institute. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-IdiapNCResearchAndEducationalOnly
+#
+
+*.DS_Store
+*~
+*.swp
+*.pyc
+*.png
+*.mp4
+*.npy
+bin/*
+eggs/*
+parts/*
+.installed.cfg
+.mr.developer.cfg
+*.egg-info
+src
+develop-eggs/*
+sphinx
+dist
+.nfs*
+.gdb_history
+build
+.coverage
+record.txt
+miniconda.sh
+miniconda/
+logs/*
+out/*
+test/*
+submitted.sql3*
