@@ -7,17 +7,22 @@
 import time
 import click
 
-from .cropper import crop
-from .generator import generate
-from .embedding import get_embedding, get_database_embeddings
-from .plot import plot
-from .projector import project
-from .project_database import project_database
-from .landmark_detector import detect_landmarks
-from .face_extractor_3d import extract_3d_face
-from .latent_analysis import latent_analysis
-from .latent_edit import latent_edit
-from .database_generator import generate_database
+from synthetics.cropper import crop
+from synthetics.generator import generate
+from synthetics.demographics import generate_demographics
+from synthetics.embedding import get_embedding, get_database_embeddings
+from synthetics.plot import plot
+from synthetics.projector import project
+from synthetics.project_database import project_database
+from synthetics.landmark_detector import detect_landmarks
+from synthetics.face_extractor_3d import extract_3d_face
+from synthetics.latent_analysis import latent_analysis
+from synthetics.latent_edit import latent_edit
+from synthetics.database_generator import generate_database
+import synthetics.tools.logging as stl
+
+
+stl.setup(level=10)
 
 start_time = None
 
@@ -53,6 +58,7 @@ def _on_close():
 
 cli.add_command(crop)
 cli.add_command(generate)
+cli.add_command(generate_demographics)
 cli.add_command(get_embedding)
 cli.add_command(get_database_embeddings)
 cli.add_command(project)

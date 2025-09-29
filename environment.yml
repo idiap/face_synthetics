@@ -47,4 +47,4 @@ dependencies:
     - mrcfile
     - gdown
     - facenet-pytorch
-    - pip install stylegan2_pytorch
+    - stylegan2_pytorch

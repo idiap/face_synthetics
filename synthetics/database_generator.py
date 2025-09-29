@@ -4,6 +4,7 @@
 #
 # This code was entirely written by a human
 
+import logging
 import os
 import math
 import glob
@@ -25,6 +26,10 @@ from .latent_edit import LatentEdit
 from .generator import Generator
 from .cropper import Cropper
 from .embedding import Embedding
+
+
+logger = logging.getLogger(__name__)
+
 
 # ---
 
@@ -108,6 +113,7 @@ class DatabaseGenerator:
             cropper_config : Cropper.Config | None = None,
             truncation_psi : float = 0.7,
             root_directory : str = None,
+            extension: str = ".png",
             create_directories : bool = True,
             parallel_parameters : ParallelParameters = ParallelParameters(),
             disable_progress_bar : bool = False,
@@ -142,7 +148,7 @@ class DatabaseGenerator:
                 cropper_input_config = Cropper.Config.mtcnn
             elif self.network_type == 'stylegan3-casia-128':
                 cropper_input_config = Cropper.Config.resize
-            elif self.network_type in ['stylegan2-256', 'stylegan3-t-265', 'stylegan3-r-265']:
+            elif self.network_type in ['stylegan2-ffhq-256', 'stylegan3-t-256', 'stylegan3-r-256']:
                 cropper_input_config = Cropper.Config.ffhq256
             elif "lucidrains" in self.network_type:
                 size = self.network_type.split("-")[-1]
@@ -165,6 +171,9 @@ class DatabaseGenerator:
             else:
                 raise RuntimeError('Root directory does not exist')
         self.root_directory = root_directory
+        if not extension.startswith("."):
+            extension = "." + extension
+        self.extension = extension
         if postprocessor_config is not None:
             self.postprocessor = Cropper(
                 input_config=cropper_input_config,
@@ -201,12 +210,15 @@ class DatabaseGenerator:
             self,
             identity : int,
             label : str,
-            image_directory : str | None = None
+            image_directory : str | None = None,
             ) -> str:
         """ Return the path to an image given identity and label. """
         if image_directory is None:
             image_directory = self.image_directory
-        file_path = os.path.join(image_directory, f'{identity:05}', f'{label}.png')
+        file_path = os.path.join(
+            image_directory,
+            f'{identity:05}',
+            f'{label}.{self.extension}')
         return file_path
 
     # ---
@@ -217,7 +229,7 @@ class DatabaseGenerator:
             latents : torch.Tensor,
             cameras : torch.Tensor | None,
             label: str | list[str] = 'reference',
-            image_directory : str | None = None
+            image_directory : str | None = None,
             ) -> None:
         """ Save images from latents. Latent array can be either 2d or 3d. """
         assert isinstance(identities, list)
@@ -1339,6 +1351,7 @@ class DatabaseGenerator:
                 identity=identity,
                 label='reference',
                 sample=sample)
+
             if self.generate_images:
                 image_post = self.postprocess_image(img=img)
                 utils.save_image(
@@ -1346,6 +1359,7 @@ class DatabaseGenerator:
                     file_path=self.get_image_path(identity, 'reference'),
                     create_directories=True)
         self.sample_collection.save()
+
 
     # ---
 
@@ -1675,9 +1689,15 @@ class DatabaseGenerator:
             dtype=self.dtype)
         for idx, identity in enumerate(self.identities):
             reference_sample = self.sample_collection.get_sample(identity, 'reference')
+            # W
             w = reference_sample.w_latent
+            # Face ID embedding -> Can be missing
             e = reference_sample.embedding
+            # EG3D stuff
             c = reference_sample.c_label
+            if e is None:
+                # Compute face embedding
+                e = self.embedding_from_w(w=w, c=c)
             w_ref[idx, :] = w[0, :]
             e_ref[idx, :] = e[0, :]
             if c_ref is not None:
@@ -1900,7 +1920,6 @@ class DatabaseGenerator:
                 label=labels)
         click.echo('...Done')
 
-    # ---
 
     def augment_identities_directions(
             self,
@@ -2006,6 +2025,7 @@ class DatabaseGenerator:
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=0.7, show_default=True)
 @click.option('--root-directory', '-r', type=click.Path(exists=False, file_okay=False, dir_okay=True, writable=True), required=True,
               help='Root of the output directory tree')
+@click.option('--extension', type=str, help="Image extension", default=".png")
 @click.option('--postprocessor-config', '-pc', type=click.Choice(Cropper.get_output_configs()), default=None, help='Post-processor cropper config')
 @click.option('--seed', '-s', type=int, default=None, help='Random seed. Fix for reproducibility.')
 @click.option('--batch-size', '-b', type=int, default=DatabaseGenerator.ParallelParameters.batch_size, help='Inference batch size.')
@@ -2019,6 +2039,7 @@ def generate_database(
         num_identities : int,
         truncation_psi : float,
         root_directory : str,
+        extension: str,
         postprocessor_config : str | None,
         seed : int | None,
         batch_size : int,
@@ -2040,6 +2061,7 @@ def generate_database(
         truncation_psi=truncation_psi,
         parallel_parameters=parallel_parameters,
         root_directory=root_directory,
+        extension=extension,
         postprocessor_config=postprocessor_config,
         disable_progress_bar=disable_progress_bar,
         generate_images=not no_images,
