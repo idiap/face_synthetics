@@ -1,4 +1,7 @@
-# Copyright (c) 2025, Idiap Research Institute. All rights reserved.
+#
+# SPDX-FileCopyrightText: Copyright (c) 2023-2024, Idiap Research Institute. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-IdiapNCResearchAndEducationalOnly
+#
 
 from typing import TYPE_CHECKING
 from pathlib import Path
