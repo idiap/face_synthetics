@@ -21,25 +21,25 @@ models:
     file_name: stylegan2.pkl
     local_model_zoo: $model_zoo_dir/stylegan2.pkl
     web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan2/versions/1/files/stylegan2-ffhq-1024x1024.pkl
-  stylegan2-256:
+  stylegan2-ffhq-256:
     type: gan
-    file_name: stylegan2-256.pkl
-    local_model_zoo: $model_zoo_dir/stylegan2-256.pkl
+    file_name: stylegan2-ffhq-256x256.pkl
+    local_model_zoo: $model_zoo_dir/stylegan2-ffhq-256x256.pkl
     web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan2/versions/1/files/stylegan2-ffhq-256x256.pkl
   stylegan3:
     type: gan
     file_name: stylegan3.pkl
     local_model_zoo: $model_zoo_dir/stylegan3.pkl
     web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-ffhq-1024x1024.pkl
-  stylegan3-t-265:
+  stylegan3-t-256:
     type: gan
-    file_name: stylegan3-t-265.pkl
-    local_model_zoo: $model_zoo_dir/stylegan3-t-265.pkl
+    file_name: stylegan3-t-256.pkl
+    local_model_zoo: $model_zoo_dir/stylegan3-t-256.pkl
     web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-ffhqu-256x256.pkl
-  stylegan3-r-265:
+  stylegan3-r-256:
     type: gan
-    file_name: stylegan3-r-265.pkl
-    local_model_zoo: $model_zoo_dir/stylegan3-r-265.pkl
+    file_name: stylegan3-r-256.pkl
+    local_model_zoo: $model_zoo_dir/stylegan3-r-256.pkl
     web_url: https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-r-ffhqu-256x256.pkl
   eg3d:
     type: gan
@@ -118,3 +118,52 @@ models:
     gdrive_id: 1dswnavflETcnAuplZj1IOKKP0eM8ITgT
     backbone_type: adaface
     architecture: ir_101
+  density-gmm-ffhq-256-sg2-two-points:
+    type: density-model
+    # Density model:
+    net:
+      _target_: synthetics.densities.compressed.CompressedGMMs
+      w_dim: -1 # Generate W, not W+
+      sampler:
+        _target_: synthetics.samplers.demographics.MixtureSampler
+        densities:
+          - _target_: synthetics.samplers.demographics.MixtureInfo
+            name: asian
+            path: $model_zoo_dir/gmm_diag_asian.skmodel
+          - _target_: synthetics.samplers.demographics.MixtureInfo
+            name: black
+            path: $model_zoo_dir/gmm_diag_black.skmodel
+          - _target_: synthetics.samplers.demographics.MixtureInfo
+            name: indian
+            path: $model_zoo_dir/gmm_diag_indian.skmodel
+          - _target_: synthetics.samplers.demographics.MixtureInfo
+            name: latino-hispanic
+            path: $model_zoo_dir/gmm_diag_latino-hispanic.skmodel
+          - _target_: synthetics.samplers.demographics.MixtureInfo
+            name: middle-eastern
+            path: $model_zoo_dir/gmm_diag_middle-eastern.skmodel
+          - _target_: synthetics.samplers.demographics.MixtureInfo
+            name: white
+            path: $model_zoo_dir/gmm_diag_white.skmodel
+      autoencoder:
+        _target_: synthetics.pytorch.models.autoencoders.LinearAutoEncoder
+        in_channels: 512
+        sizes:
+          - 256
+          - 128
+          - 64
+          - 32
+        activations:
+          - LeakyReLU
+          - ReLU
+          - ReLU
+          - ReLU
+        activation_kwargs:
+          - negative_slope: 0.2
+          - null
+          - null
+          - null
+      filename: $model_zoo_dir/epoch_<N>_weights_only.ckpt  # Autoencoder checkpoint path
+      ckpt_prefix: net._orig_mod.decoder.                   # Checkpoint prefix to remove
+    # Associated generator
+    network_type: stylegan2-ffhq-256

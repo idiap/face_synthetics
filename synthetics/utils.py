@@ -125,6 +125,13 @@ def rosinality_network_types() -> list[str]:
     return _external_types(arch="gan-rosinality")
 
 
+def density_model_types() -> list[str]:
+    """
+    List density model
+    """
+    return _external_types(arch="density-model")
+
+
 # ---
 
 # pyright: reportMissingImports=false
@@ -152,9 +159,9 @@ def get_network(
         return G
     elif network_type in lucidrains_network_types():
         import synthetics.adapters.lucidrains as al
-        # Naming: <arch>-lucidrains-<resolution>
+        # Naming: <arch>-lucidrains-<resolution>
         image_size = int(network_type.split("-")[-1])
-        # Adaptater model
+        # Adaptater model
         gen = al.GeneratorAdapter(
             z_dim=512,
             c_dim=0,
@@ -162,7 +169,7 @@ def get_network(
             img_resolution=image_size,
             img_channels=3,
             synthesis_kwargs={"remap_output": True})
-        # Reload
+        # Reload
         if network_path is None:
             network_path = get_model_path(network_type)
         state_dict = torch.load(
@@ -695,11 +702,10 @@ class Sample:
 class SampleCollection:
     """ Class that stores several samples on disk. """
 
-    def __init__(
-            self,
-            file_path : str,
-            read_only : bool = False,
-            ) -> None:
+    def __init__(self,
+                 file_path : str,
+                 read_only : bool = False,
+                 ) -> None:
         self.__samples = {}
         self.__is_saved = {}
         self.read_only = read_only
@@ -731,7 +737,7 @@ class SampleCollection:
             self,
             identity : int,
             label : int | str,
-            sample : Sample
+            sample: Sample
             ) -> None:
         """ Add a sample to the collection, if the sample already exists it is replaced. """
         assert self.read_only == False, 'Cannot add sample to read-only collection'
@@ -790,12 +796,11 @@ class SampleCollection:
 
     # ---
 
-    def load(
-            self,
-            device : torch.device = torch.device('cuda'),
-            dtype : torch.dtype = torch.float32,
-            identities : list[int] | None = None
-            ) -> None:
+    def load(self,
+             device : torch.device = torch.device('cuda'),
+             dtype : torch.dtype = torch.float32,
+             identities : list[int] | None = None
+             ) -> None:
         """ Load samples from file to memory. """
         self.__samples = {}
         self.__is_saved = {}
